@@ -4,20 +4,15 @@ if (!window.ACP) {
     window.ACP = (function() {
 	function validate_graph(graph) {
 	    var key, node, nodes, i;
-	    if (!graph['start']) {
-		throw 'No start node in graph.';
-	    }
+
 	    for (key in graph) {
 		if (graph.hasOwnProperty(key)) {
 		    console.log('Validating ' + key);
 		    node = graph[key];
-		    if (!node.action) {
-			throw 'Node ' + key + ' has no action';
-		    } 
 		    
-		    
-		    if (!handlers[node.action]) {
-			throw 'Node ' + key + ' has an invalid action: ' + graph[key].action;
+		    var action = actionFromName(key);
+		    if (!handlers[action]) {
+			throw 'Node ' + key + ' has an invalid action: ' + action;
 		    }
 		    
 		    nodes = [];
@@ -52,7 +47,10 @@ if (!window.ACP) {
 	    info: handle_info,
 	    input: handle_input, 
 	    choose: handle_choose, 
-	    set: handle_set
+	    add: handle_add, 
+	    set: handle_set,
+	    roll: handle_roll,
+	    equals: handle_equals
 	}
 
 	function handle_nop(node, state) {
@@ -70,11 +68,14 @@ if (!window.ACP) {
 	    } else {
 		text = node.text;
 	    }
+	    text = text || '';
+	    
 	    alert(text + '\n\n');
 	}
 
 	function handle_input(node, state) {
-	    var value = prompt(node.text, node.default_value);
+	    var text = node.text || '';
+	    var value = prompt(text, node.default_value);
 	    if (!value) {
 		value = node.default_value;
 	    }
@@ -82,8 +83,9 @@ if (!window.ACP) {
 	}
 
 	function handle_choose(node, state) {
-	    var ok = confirm(node.text + '\n' + 'Choose cancel for more options.');
-	    return ok ? node.ok : node.next;
+	    var text = node.text || '';
+	    var ok = confirm(text + '\n' + '[Choose cancel for more options]');
+	    return ok ? node.ok : node.cancel;
 	}
 
 	function handle_node(game_graph, node_name, state) {
@@ -93,8 +95,9 @@ if (!window.ACP) {
 	    if (!node) {
 		throw 'Missing node ' + node_name;
 	    } 
-
-	    var handle = handlers[node.action];
+	    
+	    var action = actionFromName(node_name);
+	    var handle = handlers[action];
 	    if (!handle) {
 		throw 'Missing handler for ' + node.action + ' (in node ' + node_name + ')';
 	    } 
@@ -115,7 +118,43 @@ if (!window.ACP) {
 		    state.variables[name] = node.values[name];
 		}
 	    }
-	    
+	}
+
+	function handle_add(node, state) {
+	    for (name in node.values) {
+		if (node.values.hasOwnProperty(name)) {
+		    state.variables[name] += node.values[name];
+		}
+	    }
+	}
+
+	function handle_equals(node, state) {
+	    for (name in node.values) {
+		if (node.values.hasOwnProperty(name)) {
+		    // Defaults to OR by returning out of the loop at once
+		    if (state.variables[name] === node.values[name]) {
+			return node.success;
+		    } else {
+			return node.failure;
+		    }
+		}
+	    }
+	}
+
+	function handle_roll(node, state) {
+	    if (Math.random() < node.chance) {
+		return node.success;
+	    } else {
+		return node.failure;
+	    }
+	}
+
+	function actionFromName(name) {
+	    if (!name) {
+		return '';
+	    }
+	    var parts = name.split('_');
+	    return parts[0];
 	}
 	
 	// Format function adapted from http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#4673436
