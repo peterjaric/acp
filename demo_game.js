@@ -14,7 +14,7 @@
 	info_game: {
 	    text: 'REDISCOVERED WORLD #12\n' +
 		'Standard name: Kepler-62 e\n' +
-		'Local name: Adessa\'s World\n' +
+		'Local name: Agessa\'s World\n' +
 		'Lost for: 850 standard years',
 	},
 
@@ -189,7 +189,7 @@
 	    next: 'info_the_plains'
 	},
 	info_dies_in_street: {
-	    text: 'Unfortunately you are unarmed and only managed to take two\n' +
+	    text: 'Unfortunately you are unarmed and only manage to take two\n' +
 		'of the guards with you before you are cut down.\n' +
 		'Maybe you should have stolen a weapon in the pits...'
 	},
@@ -197,6 +197,146 @@
 
 	/************* THE PLAINS *************/
 	info_the_plains: {
+	    text: 'You pass the gates without trouble. Outside you find a\n' +
+		'big camp. Apparently a nomad tribe is passing the city\n' +
+		'and is staying here to rest. There is a strange tent\n' +
+		'at the edge of the camp.',
+	    next: 'info_tent'
+	},
+	info_tent: {
+	    text: 'You enter the tent. Inside is an old woman. After exchanging\n' +
+		'greetings with you she tells you unsettling things. "Strangers\n' +
+		'have come to Agessa\'s World. They say that they are from space!"',
+	    next: 'info_strangers'
+	},
+	info_strangers: {
+	    text: 'If the strangers has come from space, maybe they will return\n' +
+		'there? As long as you are on this world, you will be hunted.\n' +
+		'You decide to find them. The old woman suddenly says, as if reading\n' +
+		'your mind: "We are going there, and I need a new servant..."',
+	    next: 'info_nomads_leave'
+	},
+	info_nomads_leave: {
+	    text: 'The next day the nomads pack their tents and start the long\n' +
+		'journey to the north. There the strangers have set up a big\n' +
+		'city of towers. Some say the towers can fly! You begin your\n' +
+		'new job, catering to every need of Catherinne, the old woman.',
+	    next: 'info_quarrel'
+	},
+	info_quarrel: {
+	    text: 'Several weeks go by. You take care of Catherinne\'s needs, but\n' +
+		'you are not used to spend so much time with the same person.\n' +
+		'Catherinne is not happy with how you serve her and tells you:\n' +
+		'"Shape up or I\'ll throw you out!"',
+	    next: 'choose_leave_wagon'
+	},
+	choose_leave_wagon: {
+	    text: 'You do feel fed up with Catherinne. Do you want to tell her that\n' +
+		'and try your luck on the road by yourself?',
+	    ok: 'info_die_on_road',
+	    cancel: ['add_1_score', 'choose_swallow_pride']
+	},
+	info_die_on_road: {
+	    text: '"I\'m not a servant! I\'m a free being!"\n' +
+		'You run out and take off on the road alone.\n' +
+		'Three days later you are close to die of thirst, but the nomads,\n' +
+		'who knew this would happen, are close by.',
+	    next: 'info_arrive_at_towers'
+	},
+	choose_swallow_pride: {
+	    text: 'On the other hand, staying with the nomads will help you attain\n' +
+		'your goal. Do you want to swallow your pride and start behaving\n' +
+		'better?',
+	    ok: 'info_arrive_at_towers',
+	    cancel: 'choose_leave_wagon'
+	},
+	info_arrive_at_towers: {
+	    text: 'Even though you have asked many questions, you are not prepared\n' +
+		'for the sight of the city of the strangers, the City of Towers.\n' +
+		'Everywhere you look, enormous towers loom into the sky. They\n' +
+		'stand on legs and they sparkle in the sunlight.',
+	    next: 'info_goodbye_nomads'
+	},
+
+
+	/************* THE STRANGERS *************/	
+	info_goodbye_nomads: {
+	    text: 'After saying goodbye to Catherinne and the rest of the nomads,\n' +
+		'you start exploring the city. The strangers are easily recognized\n' +
+		'and you decide to observe them until you know more. You hide under\n' +
+		'one of the towers.',
+	    next: 'choose_hide_in_nozzle'
+	},
+	choose_hide_in_nozzle: {
+	    text: 'Looking up, you notice that the roof is a kind of a cave. It is\n' +
+		'black, as if there has been a big fire in it. It looks like a good\n' +
+		'place to hide. Do you climb into it?',
+	    ok: 'info_die_in_nozzle',
+	    cancel: 'choose_ladder'
+	},
+	info_die_in_nozzle: {
+	    text: 'After a while your hear a big noise, and suddenly you are engulfed\n' +
+		'in flames. At least you die quickly.'
+	},
+	choose_ladder: {
+	    text: 'At the outside of the cave, there is a ladder leading up. Do you\n' +
+		'want to climb it?',
+	    ok: 'info_climb_ladder',
+	    cancel: 'choose_hide_in_nozzle'
+	},
+	info_climb_ladder: {
+	    text: 'At the top of the ladder is a small door and a walkway that goes all\n' +
+		'the way around the tower. You hear voices approaching on the walkway.\n' +
+		'The accent is thick, but you make out: "The launch code is 12528."\n' +
+		'Quickly, you enter the tower through the door.',
+	    next: 'input_launch_code'
+	},
+	input_launch_code: {
+	    text: 'Happily for you, the strangers climb down the ladder. You find yourself\n' +
+		'in a room full of blinking lights. A voice suddenly says from nowhere:\n' +
+		'"To commence take-off, please tell me the launch code."',
+	    variable: 'launch_code',
+	    default_value: '',
+	    next: 'equals_launch_code'
+	},
+	equals_launch_code: {
+	    values: {
+		launch_code: '12528'
+	    },
+	    success: ['add_1_score', 'info_launch_code_correct'],
+	    failure: 'info_hide_in_cupboard'
+	},
+	info_launch_code_correct: {
+	    text: 'The voice says: "Launch code correct. Take-off initiated."\n' +
+		'Something makes you think it\'s best to find somewhere to\n' +
+		'sit down. You find a peculiar chair made of leather and as\n' + 
+		'soon you are seated, straps automatically envelop you.',
+	    next: 'info_takeoff'
+	},
+	info_hide_in_cupboard: {
+	    text: 'The voice says: "Launch code incorrect. Take-off canceled."\n' +
+		'Suddenly someone comes through the door and you rush for\n' +
+		'cover. There is a kind of cupboard where you manage to\n' +
+		'squeeze in.',
+	    next: 'info_pilots_launch'
+	},
+	info_pilots_launch: {
+	    text: 'The man who entered the room sits down in a chair in front\n' +
+		'of the blinking lights and says:\n' +
+		'"Initiate take-off. Launch code is 12528."\n' +
+		'The spooky voice answers: "Take-off initiated."',
+	    next: 'info_takeoff'
+	},
+	info_takeoff: {
+	    text: 'The tower starts to shake! The noise is deafening. The oddest thing\n' +
+		'happens: your are pressed towards the floor, as if you weighed much\n' +
+		'more than usual. After a long while the noise stops and you feel\n' +
+		'weightless instead.',
+	    next: 'info_space'
+	},
+	info_space: {
+	    text: 'In a bout of inspiration it dawns on you: you are in space! You have\n' +
+		'left Agessa\'s world! You are free.'
 	}
     };
 
